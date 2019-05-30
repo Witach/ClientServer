@@ -1,22 +1,32 @@
 package sample.Controllers;
 
 import javafx.fxml.FXML;
-
-import java.awt.*;
+import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.Validators.UserNameValidator;
+
+import java.util.logging.Level;
 
 public class SignInController {
 
-    @FXML
-    TextField dirPathInput;
 
     @FXML
-    TextField userNameInput;
+    TextField textarea;
+
+    @FXML
+    TextField nameofuser;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
 
     @FXML
     void logIn(){
-        String userName = userNameInput.getText();
-        if(!UserNameValidator.validate(userName))
-            throw new Exception("Niepoprawna nazwa użytkownika");
+        log.info("użyto login");
+       String userName = nameofuser.getText();
+       if(!UserNameValidator.validate(userName))
+           System.exit(1);
+       log.info("Wczytano informacje uzytkownika");
     }
+
 }

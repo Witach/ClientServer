@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smaple.Controllers.AppScreenController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView fx:id="listOfLocalFiles" prefHeight="200.0" prefWidth="200.0" />
-      <Pane prefHeight="200.0" prefWidth="200.0">
+      <VBox layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <Text fx:id="annoucment" layoutX="277.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Pane fx:id="ala" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="www" layoutX="-14.0" layoutY="-14.0" prefHeight="200.0" prefWidth="600.0" />
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Text fx:id="annoucment" layoutX="277.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+               </children>
+            </Pane>
          </children>
-      </Pane>
+      </VBox>
    </children>
-</VBox>
+</AnchorPane>
