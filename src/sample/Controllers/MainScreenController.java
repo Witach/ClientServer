@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sample.Dialogs.ErrorDialog;
 
 import java.io.IOException;
 public class MainScreenController{
@@ -28,6 +29,7 @@ public class MainScreenController{
         }
         catch (IOException e){
             e.printStackTrace();
+            return;
         }
         SignInController signInController = loader.getController();
         signInController.setMainScreenController(this);
@@ -36,7 +38,9 @@ public class MainScreenController{
     }
 
     public void setScreen(Pane pane){
+        log.info("Ładowanie pane");
         mainPane.getChildren().clear();
         mainPane.getChildren().add(pane);
+        log.info("wyswietlenie pane");
     }
 }

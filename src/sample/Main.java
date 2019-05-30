@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-
 
 public class Main extends Application {
 
@@ -21,10 +19,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("Screens/MainScreen.fxml"));
         log.info("Wczytano MainScreen.fxml");
         primaryStage.setTitle("Client");
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int heightOfScreen = screenSize.height;
-        int widthOfScreen = screenSize.width;
-        primaryStage.setScene(new Scene(root,widthOfScreen/5, heightOfScreen/3 ));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
         log.info("Wyświetlono scene");
     }
