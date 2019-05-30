@@ -13,7 +13,7 @@
          <children>
             <Pane fx:id="ala" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ListView fx:id="www" layoutX="-14.0" layoutY="-14.0" prefHeight="200.0" prefWidth="600.0" />
+                  <ListView fx:id="files" layoutX="-14.0" layoutY="-14.0" prefHeight="200.0" prefWidth="600.0" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="200.0">

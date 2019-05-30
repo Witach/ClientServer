@@ -23,15 +23,15 @@
          <children>
             <StackPane prefHeight="46.0" prefWidth="0.0" GridPane.rowIndex="2">
                <children>
-                  <Button fx:id="signIn" mnemonicParsing="false" text="Zaloguj się">
+                  <Button fx:id="signIn" mnemonicParsing="false" onAction="#login" text="Zaloguj się">
                      <StackPane.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </StackPane.margin>
                   </Button>
                </children>
             </StackPane>
-            <TextField promptText="Podaj nazwe użytkownika" />
-            <TextField prefHeight="25.0" prefWidth="205.0" promptText="Podaj ścieżkę do pliku" GridPane.rowIndex="1" />
+            <TextField fx:id="nameofuser" promptText="Podaj nazwe użytkownika" />
+            <TextField fx:id="filepath" prefHeight="25.0" prefWidth="205.0" promptText="Podaj ścieżkę do pliku" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>

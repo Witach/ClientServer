@@ -12,8 +12,6 @@ public class AppScreenController {
     Text annoucment;
 
    @FXML
-   ListView www;
+   ListView files;
 
-   @FXML
-    Pane ala;
 }
