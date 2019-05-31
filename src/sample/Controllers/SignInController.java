@@ -1,6 +1,7 @@
 package sample.Controllers;
 
-import Postman.Postman;
+import Postman.DirectoryVisitor;
+import Postman.ListObservable;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
@@ -41,8 +42,10 @@ public class SignInController {
         Pane pane = Loader.loadFXMLAsPaneAndLog(loader);
         AppScreenController appScreenController = loader.getController();
         appScreenController.setMainScreenController(mainScreenController);
-        appScreenController.setPostman(new Postman(nameofuser.getText(),filepath.getText()));
+        DirectoryVisitor directoryVisitor = new DirectoryVisitor(nameofuser.getText(),filepath.getText());
+        ListObservable listObservable = new ListObservable(directoryVisitor);
         mainScreenController.setScreen(pane);
+        appScreenController.setListObservableAndInit(listObservable);
     }
 
     public void setMainScreenController(MainScreenController mainScreenController){

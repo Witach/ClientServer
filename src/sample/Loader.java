@@ -14,7 +14,7 @@ public class Loader {
             pane = loader.load();
         }catch(IOException e){
             e.printStackTrace();
-            ErrorDialog.showDialog();
+            ErrorDialog.showDialog(loader.getController().getClass().getName());
             return null;
         }
         return pane;
