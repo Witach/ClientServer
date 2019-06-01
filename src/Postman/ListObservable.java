@@ -40,8 +40,10 @@ public class ListObservable extends Thread {
         log.info("run");
             List<String> filesInDir =  directoryVisitor.getFileList().stream().map(File::getName).collect(Collectors.toList());
             filesInDir.stream().forEach( file->{
-                if(!fileList.contains(file))
+                if(!fileList.contains(file)) {
                     fileList.add(file);
+
+                }
             });
             Iterator iter = fileList.iterator();
             while(iter.hasNext()){
