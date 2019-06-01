@@ -2,6 +2,7 @@ package sample.Controllers;
 
 import Postman.DirectoryVisitor;
 import Postman.ListObservable;
+import Postman.Postman;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
@@ -12,6 +13,8 @@ import sample.Dialogs.LogInDialog;
 import sample.Loader;
 import sample.Validators.DirPathValidator;
 import sample.Validators.UserNameValidator;
+
+import java.util.concurrent.Executors;
 
 
 public class SignInController {
@@ -43,7 +46,8 @@ public class SignInController {
         AppScreenController appScreenController = loader.getController();
         appScreenController.setMainScreenController(mainScreenController);
         DirectoryVisitor directoryVisitor = new DirectoryVisitor(nameofuser.getText(),filepath.getText());
-        ListObservable listObservable = new ListObservable(directoryVisitor);
+        Postman postman = new Postman(Executors.newFixedThreadPool(5));
+        ListObservable listObservable = new ListObservable(directoryVisitor,postman);
         mainScreenController.setScreen(pane);
         appScreenController.setListObservableAndInit(listObservable);
     }

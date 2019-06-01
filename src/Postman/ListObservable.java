@@ -19,8 +19,10 @@ public class ListObservable extends Thread {
     private DirectoryVisitor directoryVisitor;
     private ObservableList fileList;
     private Logger log = LoggerFactory.getLogger(getClass());
-    public ListObservable(DirectoryVisitor directoryVisitor){
+    private Postman postman;
+    public ListObservable(DirectoryVisitor directoryVisitor, Postman postman){
         this.directoryVisitor = directoryVisitor;
+        this.postman = postman;
     }
 
     public void setListView(ObservableList fileList){
