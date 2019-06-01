@@ -1,9 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,7 +12,6 @@ import org.slf4j.LoggerFactory;
 public class Main extends Application {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private ObservableList<String> observableList;
 
     @Override
     public void start(Stage primaryStage) throws Exception{

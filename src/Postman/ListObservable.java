@@ -36,8 +36,6 @@ public class ListObservable extends Thread {
     @Override
     public void run() {
         log.info("run");
-        while(this.fileList==null);
-        while(this.fileList != null){
             List<String> filesInDir =  directoryVisitor.getFileList().stream().map(File::getName).collect(Collectors.toList());
             filesInDir.stream().forEach( file->{
                 if(!fileList.contains(file))
@@ -52,6 +50,4 @@ public class ListObservable extends Thread {
             //log.info(fileList.toString());
         }
         //log.info("zakończenie");
-
-    }
 }
