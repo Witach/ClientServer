@@ -42,7 +42,7 @@ public class ListObservable extends Thread {
             filesInDir.stream().forEach( file->{
                 if(!fileList.contains(file)) {
                     fileList.add(file);
-
+                    postman.sendFile(this.directoryVisitor.getUserName(),file,this.directoryVisitor.getDirPath());
                 }
             });
             Iterator iter = fileList.iterator();

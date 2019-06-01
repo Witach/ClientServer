@@ -21,7 +21,7 @@ import javafx.application.Platform;
 import java.util.ArrayList;
 
 
-public class AppScreenController {
+ public class AppScreenController {
     private MainScreenController mainScreenController;
     private ListObservable listObservable;
     private ObservableList<String> fileList;
