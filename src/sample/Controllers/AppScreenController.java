@@ -2,22 +2,16 @@ package sample.Controllers;
 import Postman.ListObservable;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javafx.application.Platform;
-
 import java.util.ArrayList;
 
 
@@ -57,11 +51,8 @@ import java.util.ArrayList;
     }
 
     private void doTime(){
-        KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        KeyFrame frame = new KeyFrame(Duration.seconds(1), (event) -> {
                 listObservable.run();
-            }
         });
         timeline.getKeyFrames().add(frame);
         timeline.play();

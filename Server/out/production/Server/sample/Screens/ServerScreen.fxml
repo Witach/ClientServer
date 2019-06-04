@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.FlowPane?>
+
+<FlowPane prefHeight="646.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.ServerScreenController">
+   <children>
+      <ListView fx:id="list0" prefHeight="450.0" prefWidth="200.0" />
+      <ListView fx:id="list1" prefHeight="450.0" prefWidth="200.0" />
+      <ListView fx:id="list2" prefHeight="450.0" prefWidth="200.0" />
+      <ListView fx:id="list3" prefHeight="450.0" prefWidth="200.0" />
+      <ListView fx:id="list4" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea fx:id="logsInfo" prefHeight="200.0" prefWidth="1000.0" />
+   </children>
+</FlowPane>

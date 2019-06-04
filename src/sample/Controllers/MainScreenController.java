@@ -6,7 +6,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sample.Dialogs.ErrorDialog;
 
 import java.io.IOException;
 public class MainScreenController{

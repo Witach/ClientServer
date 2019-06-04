@@ -1,41 +1,34 @@
 package Postman;
 
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class ListObservable extends Thread {
+public class ListObservable{
     private DirectoryVisitor directoryVisitor;
-    private ObservableList fileList;
+    private List fileList;
     private Logger log = LoggerFactory.getLogger(getClass());
     private Postman postman;
-    public ListObservable(DirectoryVisitor directoryVisitor, Postman postman){
+
+    public static ListObservable factory(String userName, String dirPath){
+        DirectoryVisitor directoryVisitor = new DirectoryVisitor(userName,dirPath);
+        Postman postman = new Postman(Executors.newFixedThreadPool(5));
+        return new ListObservable(directoryVisitor,postman);
+    }
+
+    private ListObservable(DirectoryVisitor directoryVisitor, Postman postman){
         this.directoryVisitor = directoryVisitor;
         this.postman = postman;
     }
 
-    public void setListView(ObservableList fileList){
+    public void setListView(List fileList){
         this.fileList = fileList;
     }
 
-    public void init(){
-        this.start();
-        log.info("uruchomienie ListObservable");
-    }
-
-
-    @Override
     public void run() {
         log.info("run");
             List<String> filesInDir =  directoryVisitor.getFileList().stream().map(File::getName).collect(Collectors.toList());
@@ -51,7 +44,5 @@ public class ListObservable extends Thread {
                if(!filesInDir.contains(tmp))
                    iter.remove();
             }
-            //log.info(fileList.toString());
         }
-        //log.info("zakończenie");
 }

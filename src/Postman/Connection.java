@@ -1,12 +1,10 @@
 package Postman;
 
-import com.sun.javafx.iio.ios.IosDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.stream.Collectors;
 //SEND|USER|NAMEOFFILE|SIZEOFFILE
 //DOWN|USER|FILENAME|SIZEOFFILE
 //SHARE|USER|TOUSER

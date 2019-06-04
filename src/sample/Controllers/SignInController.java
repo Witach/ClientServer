@@ -14,7 +14,6 @@ import sample.Loader;
 import sample.Validators.DirPathValidator;
 import sample.Validators.UserNameValidator;
 
-import java.util.concurrent.Executors;
 
 
 public class SignInController {
@@ -39,17 +38,7 @@ public class SignInController {
        if(!checkDirPath(filepath.getText()))
            return;
         log.info("Wczytano katalog");
-        log.info("Ładowanie AppScreen.fxml");
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../Screens/AppScreen.fxml"));
-        log.info("Załadowanao  AppScreen.fxml");
-        Pane pane = Loader.loadFXMLAsPaneAndLog(loader);
-        AppScreenController appScreenController = loader.getController();
-        appScreenController.setMainScreenController(mainScreenController);
-        DirectoryVisitor directoryVisitor = new DirectoryVisitor(nameofuser.getText(),filepath.getText());
-        Postman postman = new Postman(Executors.newFixedThreadPool(5));
-        ListObservable listObservable = new ListObservable(directoryVisitor,postman);
-        mainScreenController.setScreen(pane);
-        appScreenController.setListObservableAndInit(listObservable);
+        loadAppScreen();
     }
 
     public void setMainScreenController(MainScreenController mainScreenController){
@@ -74,4 +63,14 @@ public class SignInController {
         return true;
     }
 
+    private void loadAppScreen(){
+        log.info("Ładowanie AppScreen.fxml");
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("../Screens/AppScreen.fxml"));
+        log.info("Załadowanao  AppScreen.fxml");
+        Pane pane = Loader.loadFXMLAsPaneAndLog(loader);
+        AppScreenController appScreenController = loader.getController();
+        appScreenController.setMainScreenController(mainScreenController);
+        mainScreenController.setScreen(pane);
+        appScreenController.setListObservableAndInit(ListObservable.factory(nameofuser.getText(),filepath.getText()));
+    }
 }
