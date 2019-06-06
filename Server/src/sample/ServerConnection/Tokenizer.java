@@ -26,7 +26,7 @@ public class Tokenizer {
     }
 
 
-    public List<String> unTokenize(String message){
+    public static List<String> unTokenize(String message){
         return Arrays.asList(message.split(separator));
     }
 }

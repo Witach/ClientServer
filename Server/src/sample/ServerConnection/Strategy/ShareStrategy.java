@@ -38,14 +38,15 @@ public class ShareStrategy implements Strategy {
                 position += line.length();
             }
         }
-        Semaphore semaphore = SemaphoreSingleton.get();
+        String[] tmp =  csv.getAbsolutePath().split("/");
+        int index = Integer.parseInt(tmp[tmp.length-2]);
+        Semaphore semaphore = SemaphoreSingleton.get(index);
         try {
             semaphore.acquire();
         } catch (InterruptedException e){
             e.printStackTrace();
             System.exit(1);
         }
-
         RandomAccessFile randomAccessFile = new RandomAccessFile(csv.getAbsolutePath(),"rw");
         randomAccessFile.seek(position);
         if(line==null){

@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Server extends Thread{
 
     private File serverDir;
     private ServerSocket serverSocket;
 
-    private Server(String pathToServerDir){
+    public Server(String pathToServerDir){
         serverDir = new File(pathToServerDir);
         try {
             serverSocket = new ServerSocket(600023);
@@ -20,10 +20,18 @@ public class Server {
         }
     }
 
+    @Override
+    public void run() {
+        while(true){
+            listenSock();
+        }
+    }
+
     private void listenSock(){
         Socket socket = null;
         try {
             socket = serverSocket.accept();
+            Postman postman = Postman.factory(socket,serverDir.getAbsolutePath());
         } catch (IOException e){
             e.printStackTrace();
             System.exit(1);

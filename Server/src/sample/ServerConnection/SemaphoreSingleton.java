@@ -3,16 +3,15 @@ package sample.ServerConnection;
 import java.util.concurrent.Semaphore;
 
 public class SemaphoreSingleton {
-    static Semaphore semaphore;
+    static public Semaphore[] semaphore;
 
-    private void setSemaphore(Semaphore semaphore){
-        SemaphoreSingleton.semaphore = semaphore;
-    }
-
-    public static Semaphore get(){
+    public static Semaphore get(int index){
         if(semaphore==null){
-            semaphore = new Semaphore(1);
+            semaphore = new Semaphore[5];
+            for(int i=0;i<5;i++){
+                semaphore[i] = new Semaphore(1);
+            }
         }
-        return semaphore;
+        return semaphore[index];
     }
 }

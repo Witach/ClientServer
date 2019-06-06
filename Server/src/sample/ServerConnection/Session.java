@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Paths;
 
 public class Session {
     private Socket socket;
@@ -50,10 +51,8 @@ public class Session {
         log.info("sending end");
     }
 
-    public void downloadFile(String filePath, int sizeOfFile) throws IOException{
+    public byte[] downloadFile( int sizeOfFile) throws IOException{
         byte [] mybytearray  = new byte [sizeOfFile];
-        FileOutputStream fos = new FileOutputStream(filePath);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
         sendMessage("GO");
         InputStream is = socket.getInputStream();
         int bytesRead = is.read(mybytearray,0,mybytearray.length);
@@ -62,9 +61,8 @@ public class Session {
             bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
             if(bytesRead >= 0) current += bytesRead;
         } while(bytesRead > -1);
-        bos.write(mybytearray, 0 , current);
-        bos.flush();
         log.info("downloadding end");
+        return mybytearray;
     }
 
 }

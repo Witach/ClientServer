@@ -10,6 +10,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.util.Duration;
 import sample.ListObservable;
+import sample.ServerConnection.Server;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -57,6 +59,8 @@ public class ServerScreenController {
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.setAutoReverse(true);
         doTime();
+        Server server =new Server(Paths.get(new File("").getAbsolutePath()+"/Server").toString());
+        server.run();
     }
 
     private void doTime(){
