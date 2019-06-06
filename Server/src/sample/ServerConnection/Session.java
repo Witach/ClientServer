@@ -36,31 +36,30 @@ public class Session {
         log.info("getting end");
         return message;
     }
-    public void sendFile(String message, File file) throws IOException{
+    public void sendFile(File file) throws IOException{
         log.info("sending file");
         byte [] mybytearray  = new byte [(int)file.length()];
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
         bis.read(mybytearray,0,mybytearray.length);
         OutputStream os = socket.getOutputStream();
+        DataOutputStream dos = new DataOutputStream(os);
+        dos.writeUTF(file.getName()+"|"+file.length());
         os.write(mybytearray,0,mybytearray.length);
         os.flush();
         log.info("sending end");
     }
 
-    public void downloadFile(String message, String filePath) throws IOException{
-        log.info("downloadding file");
-        sendMessage(message);
-        String[] response = getMessage().split("|");
-        byte [] mybytearray  = new byte [Integer.parseInt(response[1])];
-        InputStream is = socket.getInputStream();
-        FileOutputStream fos = new FileOutputStream(filePath+"\\"+response[0]);
+    public void downloadFile(String filePath, int sizeOfFile) throws IOException{
+        byte [] mybytearray  = new byte [sizeOfFile];
+        FileOutputStream fos = new FileOutputStream(filePath);
         BufferedOutputStream bos = new BufferedOutputStream(fos);
+        sendMessage("GO");
+        InputStream is = socket.getInputStream();
         int bytesRead = is.read(mybytearray,0,mybytearray.length);
         int current = bytesRead;
         do {
-            bytesRead =
-                    is.read(mybytearray, current, (mybytearray.length-current));
+            bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
             if(bytesRead >= 0) current += bytesRead;
         } while(bytesRead > -1);
         bos.write(mybytearray, 0 , current);

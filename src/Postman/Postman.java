@@ -19,7 +19,7 @@ public class Postman{
     }
     //SEND|USER|NAMEOFFILE|SIZEOFFILE
 //DOWN|USER|FILENAME
-//SHARE|USER|TOUSER
+//SHARE|USER|FILENAME|TOUSER
 //LIST|USER
     public void sendFile(final String userName,final  String fileName, final String dirPath){
         log.info("SendFile1");
@@ -53,10 +53,10 @@ public class Postman{
         });
     }
 
-    public void share(final String userName, final String fileName){
+    public void share(final String userName, final String fileName, final String toUser){
         executor.submit(()->{
             try {
-                String message = "SHARE|"+userName+"|"+fileName;
+                String message = "SHARE|"+userName+"|"+fileName+"|"+toUser;
                 Connection connection = Connection.factory();
                 connection.sendMessage(message);
                 connection.shutDown();

@@ -1,18 +1,21 @@
 package sample.ServerConnection;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class Tokenizer {
+
+    static private String separator = "|";
+
     public static String getSeparator() {
         return separator;
     }
 
-    static private String separator;
+    public static Tokenizer create(){
+        return new Tokenizer();
+    }
 
-    public void setSeparator(String separator){
+    public static void setSeparator(String separator){
         Tokenizer.separator = separator;
     }
 
@@ -21,6 +24,7 @@ public class Tokenizer {
                 .reduce((a,b)->a+separator+b)
                 .get();
     }
+
 
     public List<String> unTokenize(String message){
         return Arrays.asList(message.split(separator));

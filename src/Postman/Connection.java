@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.Socket;
 //SEND|USER|NAMEOFFILE|SIZEOFFILE
 //DOWN|USER|FILENAME|SIZEOFFILE
-//SHARE|USER|TOUSER
+//SHARE|USER|FILENAME|TOUSER
 //LIST|USER
 public class Connection {
 
@@ -42,10 +42,12 @@ public class Connection {
     }
     public void sendFile(String message, File file) throws IOException{
         log.info("sending file");
+        sendMessage(message);
         byte [] mybytearray  = new byte [(int)file.length()];
         FileInputStream fis = new FileInputStream(file);
         BufferedInputStream bis = new BufferedInputStream(fis);
         bis.read(mybytearray,0,mybytearray.length);
+        getMessage();
         OutputStream os = socket.getOutputStream();
         os.write(mybytearray,0,mybytearray.length);
         os.flush();
@@ -63,8 +65,7 @@ public class Connection {
         int bytesRead = is.read(mybytearray,0,mybytearray.length);
         int current = bytesRead;
         do {
-            bytesRead =
-                    is.read(mybytearray, current, (mybytearray.length-current));
+            bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
             if(bytesRead >= 0) current += bytesRead;
         } while(bytesRead > -1);
         bos.write(mybytearray, 0 , current);
