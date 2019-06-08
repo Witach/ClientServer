@@ -1,5 +1,7 @@
 package sample.ServerConnection.Strategy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.ServerConnection.Search;
 import sample.ServerConnection.SemaphoreSingleton;
 import sample.ServerConnection.Session;
@@ -13,18 +15,21 @@ import java.util.concurrent.Semaphore;
 
 public class ShareStrategy implements Strategy {
 
+    Logger log = LoggerFactory.getLogger(getClass().getName());
 
     @Override
     public void reply(Session session, String pathToServerDir, String... parameters) throws IOException {
+        log.info("użyto share strategy");
        File csv = Search.getCvsWithFile(pathToServerDir,parameters[0],parameters[1]);
         Scanner scanner = new Scanner(new FileInputStream(csv));
         long position = 0;
         String line = null;
         String line2 = null;
+        log.info("użyto stream do csv");
         while(scanner.hasNextLine()){
             line = scanner.nextLine();
-            if(line.contains(parameters[1])&&line.contains(parameters[0])){
-                if(line.contains(parameters[2])){
+            if(line.contains(parameters[2])&&line.contains(parameters[1])){
+                if(line.contains(parameters[3])){
                     scanner.close();
                     return;
                 }
@@ -38,6 +43,7 @@ public class ShareStrategy implements Strategy {
                 position += line.length();
             }
         }
+        log.info("znaleziono pozycje");
         String[] tmp =  csv.getAbsolutePath().split("/");
         int index = Integer.parseInt(tmp[tmp.length-2]);
         Semaphore semaphore = SemaphoreSingleton.get(index);
@@ -52,11 +58,13 @@ public class ShareStrategy implements Strategy {
         if(line==null){
             return;
         }
-        randomAccessFile.writeUTF(parameters[2]+",\n");
+        log.info("nadpisano pozwolenia");
+        randomAccessFile.writeUTF(parameters[3]+",\n");
         randomAccessFile.writeUTF(line);
         while(scanner.hasNextLine()){
             randomAccessFile.writeUTF(scanner.nextLine());
         }
         semaphore.release();
+        log.info("zakończono share");
     }
 }

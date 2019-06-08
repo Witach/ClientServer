@@ -5,16 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Paths;
-
 public class Session {
     private Socket socket;
     private Logger log = LoggerFactory.getLogger(getClass());
-    private Session(Socket socket) throws IOException{
+    private Session(Socket socket){
         this.socket = socket;
     }
 
-    static public Session factory(Socket socket) throws IOException{
+    static public Session factory(Socket socket){
         Session tmp = tmp = new Session(socket);
         return tmp;
     }
@@ -59,8 +57,9 @@ public class Session {
         int current = bytesRead;
         do {
             bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
-            if(bytesRead >= 0) current += bytesRead;
-        } while(bytesRead > -1);
+            log.info("czy nieskończona");
+            if(bytesRead > 0) current += bytesRead;
+        } while(bytesRead > 0);
         log.info("downloadding end");
         return mybytearray;
     }

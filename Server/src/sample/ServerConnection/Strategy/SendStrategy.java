@@ -1,18 +1,21 @@
 package sample.ServerConnection.Strategy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sample.ServerConnection.SemaphoreSingleton;
 import sample.ServerConnection.Session;
 
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
-
 public class SendStrategy implements Strategy {
 
+    Logger log = LoggerFactory.getLogger(getClass().getName());
     @Override
     public void reply(Session session, String pathToServerDir, String... parameters) throws IOException {
-       byte[] bytesOfFile = session.downloadFile(Integer.parseInt(parameters[2]));
+        log.info("użyto sendstrategy");
+       byte[] bytesOfFile = session.downloadFile(Integer.parseInt(parameters[3]));
+        log.info("użyto session.download");
        ArrayList<String> dirNames = new ArrayList<>();
         File serverDir = new File(pathToServerDir);
         for(File file: serverDir.listFiles()){
@@ -20,46 +23,37 @@ public class SendStrategy implements Strategy {
                 dirNames.add(file.getName());
             }
         }
-        ArrayList<Thread> writers = new ArrayList<>();
-       ArrayList<Thread> workers = new ArrayList<>();
+        log.info("utworzono dirnames");
+       ArrayList<Thread> writers = new ArrayList<>();
         for(int i=0;i<dirNames.size();i++){
-            workers.add(getThread(Paths.get(pathToServerDir+"/"+dirNames.get(i)+"/info.csv").toString(),
+            writers.add(getThread(Paths.get(pathToServerDir+"/"+dirNames.get(i)).toString(),
+                    parameters[2],
                     parameters[1],
-                    parameters[0],
-                    i
-            ));
-            writers.add(writeIntoDirs(
-                    pathToServerDir+"/"+dirNames.get(i),
-                    parameters[1],
+                    i,
                     bytesOfFile
             ));
         }
-        for(Thread thread: writers){
-            thread.start();
-        }
-        while(true){
-            for (int i=0 ; i<workers.size() ; i++){
-                if(writers.get(i).isInterrupted()&&!workers.get(i).isInterrupted()){
-                   workers.get(i).start();
-                }
+        try {
+
+            for(Thread thread: writers){
+                thread.join();
             }
-            int flag=0;
-            for(Thread thread: workers){
-                if(thread.isInterrupted())
-                    flag++;
-            }
-            if (flag>=5)
-                break;
-            else
-                flag=0;
+        } catch (InterruptedException e){
+            e.printStackTrace();
+            System.exit(1);
         }
+        log.info("aktywowano writers ");
     }
 
-    private Thread getThread(final String filePath,final String fileName,final String username, int semaphoreIndex){
+    private Thread getThread(final String filePath,final String fileName,final String username, int semaphoreIndex,byte[] file){
         return new Thread(()->{
             try {
+                FileOutputStream fos = new FileOutputStream(Paths.get(filePath+"/"+fileName).toString());
+                BufferedOutputStream bos = new BufferedOutputStream(fos);
+                bos.write(file, 0, file.length);
+                bos.flush();
                 SemaphoreSingleton.get(semaphoreIndex).acquire();
-                PrintWriter writer = new PrintWriter(new FileWriter( Paths.get(filePath).toString(), true));
+                PrintWriter writer = new PrintWriter(new FileWriter( Paths.get(filePath+"/info.csv").toString(), true));
                 writer.write(fileName + ";" + username + ";");
                 writer.close();
                 SemaphoreSingleton.get(semaphoreIndex).release();
@@ -70,17 +64,4 @@ public class SendStrategy implements Strategy {
         });
     }
 
-    private Thread writeIntoDirs(final String pathToDir, final String fileName,final byte[] file){
-        return new Thread(()->{
-            try {
-                FileOutputStream fos = new FileOutputStream(Paths.get(pathToDir+"/"+fileName).toString());
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
-                bos.write(file, 0, file.length);
-                bos.flush();
-            }catch (IOException e){
-                e.printStackTrace();
-                System.exit(1);
-            }
-        });
-    }
 }

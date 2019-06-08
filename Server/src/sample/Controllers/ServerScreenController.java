@@ -60,7 +60,7 @@ public class ServerScreenController {
         this.timeline.setAutoReverse(true);
         doTime();
         Server server =new Server(Paths.get(new File("").getAbsolutePath()+"/Server").toString());
-        server.run();
+        server.start();
     }
 
     private void doTime(){

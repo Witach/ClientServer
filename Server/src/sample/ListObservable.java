@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class ListObservable{
     private DirectoryVisitor directoryVisitor;
     private List fileList;
-    private Logger log = LoggerFactory.getLogger(getClass());
+   // private Logger log = LoggerFactory.getLogger(getClass());
 
     public static ListObservable factory(String dirPath){
         DirectoryVisitor directoryVisitor = new DirectoryVisitor(dirPath);
@@ -27,7 +27,7 @@ public class ListObservable{
     }
 
     public void run() {
-        log.info("run");
+       // log.info("run");
         List<String> filesInDir =  directoryVisitor.getFileList().stream().map(File::getName).collect(Collectors.toList());
         filesInDir.stream().forEach( file->{
             if(!fileList.contains(file)) {

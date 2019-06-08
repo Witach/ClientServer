@@ -14,7 +14,7 @@ public class Connection {
     private Socket socket;
     private Logger log = LoggerFactory.getLogger(getClass());
     private Connection() throws IOException{
-            this.socket = new Socket("localhost",6022386);
+            this.socket = new Socket("localhost",65534);
     }
 
     static public Connection factory() throws IOException{
@@ -51,13 +51,13 @@ public class Connection {
         OutputStream os = socket.getOutputStream();
         os.write(mybytearray,0,mybytearray.length);
         os.flush();
-        log.info("sending end");
+        log.info("sending file end");
     }
 
     public void downloadFile(String message, String filePath) throws IOException{
         log.info("downloadding file");
         sendMessage(message);
-        String[] response = getMessage().split("|");
+        String[] response = getMessage().split(";");
         byte [] mybytearray  = new byte [Integer.parseInt(response[1])];
         InputStream is = socket.getInputStream();
         FileOutputStream fos = new FileOutputStream(filePath+"\\"+response[0]);

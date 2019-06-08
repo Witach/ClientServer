@@ -1,19 +1,28 @@
 package sample.ServerConnection;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import org.slf4j.Logger;
 
 public class Server extends Thread{
 
     private File serverDir;
+    private  TaskController taskController;
     private ServerSocket serverSocket;
-
-    public Server(String pathToServerDir){
+    Logger log = LoggerFactory.getLogger(getClass().getName());
+    public Server(String pathToServerDir, int amountOfLightWorkers, int amountOfHeavyWorkers){
         serverDir = new File(pathToServerDir);
+        taskController = new TaskController(new LinkedBlockingQueue<Task>(),
+                new LinkedBlockingQueue<Task>(),amountOfHeavyWorkers,amountOfLightWorkers);
         try {
-            serverSocket = new ServerSocket(600023);
+            serverSocket = new ServerSocket( 65534);
+            log.info("utowrzono server socket");
         } catch (IOException e){
             e.printStackTrace();
             System.exit(1);
@@ -30,12 +39,18 @@ public class Server extends Thread{
     private void listenSock(){
         Socket socket = null;
         try {
+            log.info("czekanie na klienta");
             socket = serverSocket.accept();
-            Postman postman = Postman.factory(socket,serverDir.getAbsolutePath());
+            log.info("zaakcptowano gniazdo sieciowe");
+            Postman postman = Postman.factory(socket,serverDir.getAbsolutePath(),taskController);
+            log.info("utworzono postman dla klienta");
+            postman.run();
+            log.info("uruchomiono wątek klienta");
         } catch (IOException e){
             e.printStackTrace();
             System.exit(1);
         }
 
     }
+
 }

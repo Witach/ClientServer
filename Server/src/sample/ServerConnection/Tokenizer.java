@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Tokenizer {
 
-    static private String separator = "|";
+    static private String separator = ";";
 
     public static String getSeparator() {
         return separator;
@@ -26,7 +26,7 @@ public class Tokenizer {
     }
 
 
-    public static List<String> unTokenize(String message){
-        return Arrays.asList(message.split(separator));
+    public static String[] unTokenize(String message){
+        return message.split(separator);
     }
 }
