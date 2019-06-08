@@ -3,15 +3,35 @@ package sample.ServerConnection;
 import java.util.concurrent.Semaphore;
 
 public class SemaphoreSingleton {
-    static public Semaphore[] semaphore;
+     private static SemaphoreSingleton semaphoreSingleton;
+     public Semaphore[] writersSemaphore;
+     public Semaphore[] readersSemaphore;
 
-    public static Semaphore get(int index){
-        if(semaphore==null){
-            semaphore = new Semaphore[5];
+     private SemaphoreSingleton(){
+        if(writersSemaphore==null){
+            writersSemaphore = new Semaphore[5];
             for(int i=0;i<5;i++){
-                semaphore[i] = new Semaphore(1);
+                writersSemaphore[i] = new Semaphore(1);
             }
         }
-        return semaphore[index];
+        if(readersSemaphore==null){
+            readersSemaphore = new Semaphore[5];
+            for(int i=0;i<5;i++){
+                readersSemaphore[i] = new Semaphore(1);
+            }
+        }
+    }
+     public static SemaphoreSingleton create(){
+        if(semaphoreSingleton == null){
+            semaphoreSingleton = new SemaphoreSingleton();
+        }
+        return semaphoreSingleton;
+    }
+    public static Semaphore getWritersSemaphore(int index){
+        return semaphoreSingleton.writersSemaphore[index];
+    }
+
+    public static Semaphore getReadersSemaphore(int index){
+        return semaphoreSingleton.readersSemaphore[index];
     }
 }

@@ -54,18 +54,13 @@ public class Search {
     }
 
     public static List<File> getListOfFilesWithPermissionCheck(String pathToServeDir, String userName){
-        File dirServer = new File(pathToServeDir);
-        File[] dirs = dirServer.listFiles();
-        List<File> listOfcsv = Arrays.stream(dirs)
-                .map(a-> new File(Paths.get(a.getAbsolutePath() + "/info.csv").toString()))
-                .collect(Collectors.toList());
+        File csv = new File(Paths.get(pathToServeDir+"/0/info.csv").toString());
         ArrayList<File> fileList = new ArrayList<>();
-        for(File file: listOfcsv){
-            try(InputStream is = new FileInputStream(file)){
+            try(InputStream is = new FileInputStream(csv)){
                 Scanner scanner = new Scanner(is);
                 while(scanner.hasNextLine()){
                     String line = scanner.nextLine().toUpperCase();
-                    if(line.contains(userName)){
+                    if(line.contains(userName.toUpperCase())){
                         String[] params = line.split(";");
                         File tmp = new File(params[0]);
                         fileList.add(tmp);
@@ -75,7 +70,6 @@ public class Search {
                 e.printStackTrace();
                 System.exit(1);
             }
-        }
         return fileList;
     }
 

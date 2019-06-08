@@ -59,7 +59,7 @@ public class ServerScreenController {
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.setAutoReverse(true);
         doTime();
-        Server server =new Server(Paths.get(new File("").getAbsolutePath()+"/Server").toString());
+        Server server =new Server(Paths.get(new File("").getAbsolutePath()+"/Server").toString(),2,1);
         server.start();
     }
 

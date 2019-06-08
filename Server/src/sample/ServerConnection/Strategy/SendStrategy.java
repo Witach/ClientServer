@@ -34,7 +34,9 @@ public class SendStrategy implements Strategy {
             ));
         }
         try {
-
+            for(Thread thread: writers){
+                thread.start();
+            }
             for(Thread thread: writers){
                 thread.join();
             }
@@ -47,19 +49,24 @@ public class SendStrategy implements Strategy {
 
     private Thread getThread(final String filePath,final String fileName,final String username, int semaphoreIndex,byte[] file){
         return new Thread(()->{
+            PrintWriter writer = null;
             try {
                 FileOutputStream fos = new FileOutputStream(Paths.get(filePath+"/"+fileName).toString());
                 BufferedOutputStream bos = new BufferedOutputStream(fos);
                 bos.write(file, 0, file.length);
                 bos.flush();
-                SemaphoreSingleton.get(semaphoreIndex).acquire();
-                PrintWriter writer = new PrintWriter(new FileWriter( Paths.get(filePath+"/info.csv").toString(), true));
-                writer.write(fileName + ";" + username + ";");
+                bos.close();
+                SemaphoreSingleton.getWritersSemaphore(semaphoreIndex).acquire();
+                SemaphoreSingleton.getReadersSemaphore(semaphoreIndex).acquire();
+                writer = new PrintWriter(new FileWriter( Paths.get(filePath+"/info.csv").toString(), true));
+                writer.write(fileName + ";" + username + ";\n");
                 writer.close();
-                SemaphoreSingleton.get(semaphoreIndex).release();
             } catch (InterruptedException|IOException e){
                 e.printStackTrace();
                 System.exit(1);
+            } finally {
+                SemaphoreSingleton.getWritersSemaphore(semaphoreIndex).release();
+                SemaphoreSingleton.getReadersSemaphore(semaphoreIndex).release();
             }
         });
     }

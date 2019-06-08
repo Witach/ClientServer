@@ -3,12 +3,14 @@ package sample.ServerConnection.Strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sample.ServerConnection.Search;
+import sample.ServerConnection.SemaphoreSingleton;
 import sample.ServerConnection.Session;
 import sample.ServerConnection.Tokenizer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class ListStrategy implements Strategy{
@@ -17,7 +19,17 @@ public class ListStrategy implements Strategy{
     @Override
     public void reply(Session session, String parthToServerDir, String... parameters) throws IOException {
         log.info("strategia list");
-        List<File> fileList = Search.getListOfFilesWithPermissionCheck(parthToServerDir,parameters[1]);
+        Semaphore semaphore = SemaphoreSingleton.getReadersSemaphore(0);
+        List<File> fileList = null;
+        try {
+            semaphore.acquire();
+            fileList = Search.getListOfFilesWithPermissionCheck(parthToServerDir, parameters[1]);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+            System.exit(1);
+        }finally {
+            semaphore.release();
+        }
         log.info("użyto getListOfFilesWithPermissionCheck");
         List<String> listOfNames = fileList.stream()
                 .map(a -> a.getName())

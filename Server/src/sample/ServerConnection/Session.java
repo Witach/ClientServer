@@ -57,7 +57,6 @@ public class Session {
         int current = bytesRead;
         do {
             bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
-            log.info("czy nieskończona");
             if(bytesRead > 0) current += bytesRead;
         } while(bytesRead > 0);
         log.info("downloadding end");

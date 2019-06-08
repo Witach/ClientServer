@@ -20,6 +20,7 @@ public class Server extends Thread{
         serverDir = new File(pathToServerDir);
         taskController = new TaskController(new LinkedBlockingQueue<Task>(),
                 new LinkedBlockingQueue<Task>(),amountOfHeavyWorkers,amountOfLightWorkers);
+        SemaphoreSingleton.create();
         try {
             serverSocket = new ServerSocket( 65534);
             log.info("utowrzono server socket");
@@ -44,7 +45,7 @@ public class Server extends Thread{
             log.info("zaakcptowano gniazdo sieciowe");
             Postman postman = Postman.factory(socket,serverDir.getAbsolutePath(),taskController);
             log.info("utworzono postman dla klienta");
-            postman.run();
+            postman.start();
             log.info("uruchomiono wątek klienta");
         } catch (IOException e){
             e.printStackTrace();

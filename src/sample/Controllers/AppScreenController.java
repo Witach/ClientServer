@@ -38,6 +38,7 @@ import java.util.ArrayList;
         this.timeline = new Timeline();
         this.timeline.setCycleCount(Timeline.INDEFINITE);
         this.timeline.setAutoReverse(true);
+        this.listObservable.getListOfFileFromServer();
         doTime();
     }
 
@@ -55,6 +56,11 @@ import java.util.ArrayList;
                 listObservable.run();
         });
         timeline.getKeyFrames().add(frame);
+        KeyFrame frame2 = new KeyFrame(Duration.seconds(5), (event) -> {
+            listObservable.getListOfFileFromServer();
+        });
+
+        timeline.getKeyFrames().add(frame2);
         timeline.play();
 
     }

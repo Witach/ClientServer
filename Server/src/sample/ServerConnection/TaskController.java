@@ -14,14 +14,19 @@ public class TaskController {
             this.queueWithLightTask = queueWithLightTask;
             this.listOfHeavyWorkers = new ArrayList<>();
             this.listOfLightWorkers = new ArrayList<>();
-            for(int i=0;i<amountOfHeavyWorkers;i++){
-                listOfHeavyWorkers.add(new Thread(()->{
+            for(int i=0;i<amountOfLightWorkers;i++){
+                listOfLightWorkers.add(new Thread(()->{
                     try {
                         while(true){
+                            if(queueWithHeavyTask.isEmpty()){
+                                Thread.sleep(500);
+                                continue;
+                            }
                             Task task = (Task)queueWithHeavyTask.poll();
                             task.strategy.reply(task.session,task.dirPath,task.paramteres);
+                            task.session.shutDown();
                         }
-                    } catch (IOException e){
+                    } catch (IOException|InterruptedException e){
                         e.printStackTrace();
                         System.exit(1);
                     }
@@ -32,15 +37,26 @@ public class TaskController {
                 listOfHeavyWorkers.add(new Thread(()->{
                     try {
                         while(true){
+                            if(queueWithLightTask.isEmpty()){
+                                Thread.sleep(500);
+                                continue;
+                            }
                             Task task = (Task)queueWithLightTask.poll();
                             task.strategy.reply(task.session,task.dirPath,task.paramteres);
+                            task.session.shutDown();
                         }
-                    } catch (IOException e){
+                    } catch (IOException|InterruptedException e){
                         e.printStackTrace();
                         System.exit(1);
                     }
 
                 }));
+            }
+            for(int i=0;i<amountOfHeavyWorkers;i++){
+                listOfHeavyWorkers.get(i).start();
+            }
+            for(int i=0;i<amountOfLightWorkers;i++){
+                listOfLightWorkers.get(i).start();
             }
         }
 

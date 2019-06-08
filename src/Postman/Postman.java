@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Postman{
     private ExecutorService executor;
@@ -63,16 +62,23 @@ public class Postman{
         });
     }
 
-    public void list(final String userName, final ArrayList<String> fileList){
+    public void list(final String userName, final List<String> fileList){
         executor.submit(()->{
             try {
                 String message = "LIST;"+userName;
                 Connection connection = Connection.factory();
                 connection.sendMessage(message);
                 String fileListString = connection.getMessage();
-                Arrays.stream(fileListString.split("|")).forEach(fileName->fileList.add(fileName));
-            }catch (IOException e){
+                SemaphoreSingleton.getListSemaphore().acquire();
+                Arrays.stream(fileListString.split(";"))
+                        .forEach(fileName->{
+                            if(!fileList.contains(fileName))
+                                fileList.add(fileName);
+                        });
+            }catch (IOException|InterruptedException e){
                 e.printStackTrace();
+            }finally {
+                SemaphoreSingleton.getListSemaphore().release();
             }
         });
     }
