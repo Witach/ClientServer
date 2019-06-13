@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Postman{
-    private ExecutorService executor;
+    ExecutorService executor;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public Postman(ExecutorService executor){
@@ -20,19 +22,20 @@ public class Postman{
 //DOWN|USER|FILENAME
 //SHARE|USER|FILENAME|TOUSER
 //LIST|USER
+    //USERS
     public void sendFile(final String userName,final  String fileName, final String dirPath){
         log.info("SendFile1");
         executor.submit(()-> {
             log.info("SendFile2");
                 try {
-                    File file = new File(dirPath+"\\"+fileName);
-                    String message = "SEND;"+userName+";"+fileName+";"+(int)file.length();
-                    log.info("Sending 3");
-                    Connection connection = Connection.factory();
-                    log.info("Sending 4");
-                    connection.sendFile(message,file);
-                }catch (IOException e){
-                    log.info("Sending error");
+                        File file = new File(dirPath+"\\"+fileName);
+                        String message = "SEND;"+userName+";"+fileName+";"+(int)file.length();
+                        log.info("Sending 3");
+                        Connection connection = Connection.factory();
+                        log.info("Sending 4");
+                        connection.sendFile(message,file);
+                    }catch (IOException e){
+                        log.info("Sending error");
                     e.printStackTrace();
                 }
         });
@@ -62,24 +65,34 @@ public class Postman{
         });
     }
 
-    public void list(final String userName, final List<String> fileList){
+    public void list(final String userName, final AtomicReference<List<String>> atomicListOfFile, AtomicBoolean flag){
         executor.submit(()->{
             try {
                 String message = "LIST;"+userName;
                 Connection connection = Connection.factory();
                 connection.sendMessage(message);
                 String fileListString = connection.getMessage();
-                SemaphoreSingleton.getListSemaphore().acquire();
-                Arrays.stream(fileListString.split(";"))
-                        .forEach(fileName->{
-                            if(!fileList.contains(fileName))
-                                fileList.add(fileName);
-                        });
-            }catch (IOException|InterruptedException e){
+                String[] fileList = fileListString.split(";");
+                atomicListOfFile.set(Arrays.asList(fileList));
+                flag.set(true);
+            }catch (IOException e){
                 e.printStackTrace();
-            }finally {
-                SemaphoreSingleton.getListSemaphore().release();
             }
         });
+    }
+
+    public String[] listOfUsers(){
+        String[] list = null;
+            try {
+                String message = "USERS";
+                Connection connection = Connection.factory();
+                connection.sendMessage(message);
+                String usersListString = connection.getMessage();
+                list =  usersListString.split(";");
+                return list;
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return list;
     }
 }

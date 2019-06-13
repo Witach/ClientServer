@@ -1,10 +1,10 @@
 package sample.Validators;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+        import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;
 
-import java.io.File;
+        import java.io.File;
 
 public class DirPathValidator {
     static public boolean validate(String dirPath){

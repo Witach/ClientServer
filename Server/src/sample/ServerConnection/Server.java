@@ -16,10 +16,10 @@ public class Server extends Thread{
     private  TaskController taskController;
     private ServerSocket serverSocket;
     Logger log = LoggerFactory.getLogger(getClass().getName());
-    public Server(String pathToServerDir, int amountOfLightWorkers, int amountOfHeavyWorkers){
+    public Server(String pathToServerDir, int amountOfLightWorkers){
         serverDir = new File(pathToServerDir);
-        taskController = new TaskController(new LinkedBlockingQueue<Task>(),
-                new LinkedBlockingQueue<Task>(),amountOfHeavyWorkers,amountOfLightWorkers);
+        taskController = new TaskController(amountOfLightWorkers);
+        FileControllerSingleton.create(pathToServerDir);
         SemaphoreSingleton.create();
         try {
             serverSocket = new ServerSocket( 65534);

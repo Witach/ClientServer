@@ -12,7 +12,7 @@ public class DownStrategy  implements Strategy{
     @Override
     public void reply(Session session, String parthToServerDir, String... parameters) throws IOException {
         log.info("w strategi");
-       File fileToSend = Search.getFileWithCheckPermission(parthToServerDir,parameters[1],parameters[2]);
+       File fileToSend = Search.getFile(parameters[2]);
         log.info("użyto getFileWithCheckPermission");
        session.sendFile(fileToSend);
         log.info("użyto session.sendFile");

@@ -23,7 +23,7 @@ public class ListStrategy implements Strategy{
         List<File> fileList = null;
         try {
             semaphore.acquire();
-            fileList = Search.getListOfFilesWithPermissionCheck(parthToServerDir, parameters[1]);
+            fileList = Search.getListOfFileWithCheckPermmision(parameters[1]);
         } catch (InterruptedException e){
             e.printStackTrace();
             System.exit(1);

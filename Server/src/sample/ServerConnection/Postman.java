@@ -2,6 +2,7 @@ package sample.ServerConnection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sample.ServerConnection.Strategy.Strategy;
 import sample.ServerConnection.Strategy.StrategyFactory;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class Postman extends Thread{
     private Postman(Socket socket, String pathToServerDir, TaskController taskController) throws IOException {
         this.session = Session.factory(socket);
         this.pathToServerDir = pathToServerDir;
-        this.taskController =taskController;
+        this.taskController = taskController;
     }
 
     public static Postman factory(Socket socket, String pathToServerDir, TaskController taskController){
@@ -37,17 +38,12 @@ public class Postman extends Thread{
     public void serve(String request){
         log.info("rozpoczęcie obsługi");
         String[] info = Tokenizer.unTokenize(request);
-        if(info[0].equals("SEND")||info[0].equals("SHARE")){
-            taskController.addHeavyTask(new Task(StrategyFactory.createStrategy(info[0]),info,session,pathToServerDir));
-        }
-        else{
-            taskController.addLightTask(new Task(StrategyFactory.createStrategy(info[0]),info,session,pathToServerDir));
-        }
+        Strategy strategy = StrategyFactory.createStrategy(info[0]);
+        taskController.addTask(new Task(strategy, info, session,pathToServerDir));
     }
     @Override
     public void run(){
         try {
-
             String request =  waitForRequest();
             serve(request);
         } catch (IOException e){

@@ -19,6 +19,7 @@ import java.util.ArrayList;
     private MainScreenController mainScreenController;
     private ListObservable listObservable;
     private ObservableList<String> fileList;
+     private ObservableList<String> users;
     private Timeline timeline;
     private Logger log = LoggerFactory.getLogger(getClass());
     @FXML
@@ -34,6 +35,10 @@ import java.util.ArrayList;
     public void setListObservableAndInit(ListObservable listObservable){
         this.listObservable = listObservable;
         this.listObservable.setListView(fileList);
+        users = FXCollections.observableArrayList(this.listObservable.getListOfUsersFromServer());
+        ListProperty tmpUsersPropety = new SimpleListProperty();
+        tmpUsersPropety.set(users);
+
         log.info("Ustawiono postman dla AppScreen");
         this.timeline = new Timeline();
         this.timeline.setCycleCount(Timeline.INDEFINITE);

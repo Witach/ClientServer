@@ -2,6 +2,7 @@ package sample.ServerConnection.Strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sample.ServerConnection.FileControllerSingleton;
 import sample.ServerConnection.Search;
 import sample.ServerConnection.SemaphoreSingleton;
 import sample.ServerConnection.Session;
@@ -18,45 +19,43 @@ public class ShareStrategy implements Strategy {
     @Override
     public void reply(Session session, String pathToServerDir, String... parameters) throws IOException {
         log.info("użyto share strategy");
-       File csv = Search.getCvsWithFile(pathToServerDir,parameters[0],parameters[1]);
+        int dirNumber = Search.getNumberOfDirOfFile(parameters[2]);
+        File csv = FileControllerSingleton.getInstance().listOfCsv.get(dirNumber);
         Scanner scanner = new Scanner(new FileInputStream(csv));
         long position = 0;
         String line = null;
-        String line2 = null;
         log.info("użyto stream do csv");
-        while(scanner.hasNextLine()){
-            line = scanner.nextLine();
-            if(line.contains(parameters[2])&&line.contains(parameters[1])){
-                if(line.contains(parameters[3])){
-                    scanner.close();
-                    return;
-                }
-                position += line.length();
-                if(scanner.hasNextLine())
-                    line = scanner.nextLine();
-                else
-                    line = "";
-                break;
-            }else {
-                position += line.length();
-            }
-        }
         log.info("znaleziono pozycje");
-        String[] tmp =  csv.getAbsolutePath().split("/");
-        int index = Integer.parseInt(tmp[tmp.length-2]);
-        Semaphore writersSemaphore = SemaphoreSingleton.getWritersSemaphore(index);
-        Semaphore readersSemaphore = SemaphoreSingleton.getReadersSemaphore(index);
+        Semaphore writersSemaphore = SemaphoreSingleton.getWritersSemaphore(dirNumber);
+        Semaphore readersSemaphore = SemaphoreSingleton.getReadersSemaphore(dirNumber);
         try {
             readersSemaphore.acquire();
+            while(scanner.hasNextLine()){
+                line = scanner.nextLine();
+                if(line.contains(parameters[2])){
+                    if(line.contains(parameters[3])){
+                        scanner.close();
+                        return;
+                    }
+                    position += line.length();
+                    if(scanner.hasNextLine())
+                        line = scanner.nextLine();
+                    else
+                        line = "";
+                    break;
+                }else {
+                    position += line.length();
+                }
+            }
             writersSemaphore.acquire();
             RandomAccessFile randomAccessFile = new RandomAccessFile(csv.getAbsolutePath(),"rw");
             randomAccessFile.seek(position);
+            randomAccessFile.writeUTF(parameters[3]+",\n");
             if(line==null){
                 return;
             }
-            log.info("nadpisano pozwolenia");
-            randomAccessFile.writeUTF(parameters[3]+",\n");
             randomAccessFile.writeUTF(line);
+            log.info("nadpisano pozwolenia");
             while(scanner.hasNextLine()){
                 randomAccessFile.writeUTF(scanner.nextLine());
             }
